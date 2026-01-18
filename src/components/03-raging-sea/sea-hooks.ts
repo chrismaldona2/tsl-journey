@@ -16,7 +16,7 @@ import { useTexture } from "@react-three/drei";
 import { useControls } from "leva";
 
 export function useSeaMaterial() {
-  const foamTexture = useTexture("/foam-texture.webp");
+  const foamTexture = useTexture("/textures/foam.webp");
 
   return useMemo(() => {
     /* Uniforms */
@@ -51,7 +51,7 @@ export function useSeaMaterial() {
     const heightMask = smoothstep(
       foamThreshold,
       foamThreshold.add(foamSmoothness),
-      waveElevation
+      waveElevation,
     );
     const foamMask = texture(foamTexture, uv()).r.mul(heightMask);
 
@@ -65,7 +65,7 @@ export function useSeaMaterial() {
     const coords = uv();
     const distToEdge = min(
       coords.x.min(coords.x.oneMinus()),
-      coords.y.min(coords.y.oneMinus())
+      coords.y.min(coords.y.oneMinus()),
     );
     const opacityNode = smoothstep(0, edgeCut, distToEdge);
 
@@ -219,6 +219,6 @@ export function useSeaControls(uniforms: SeaUniforms) {
         },
       },
     },
-    { collapsed: true }
+    { collapsed: true },
   );
 }

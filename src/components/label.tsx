@@ -2,8 +2,10 @@ import { Html } from "@react-three/drei";
 import { HtmlProps } from "@react-three/drei/web/Html";
 import { useState } from "react";
 
-export default function SketchLabel(props: HtmlProps) {
+export default function Label(props: HtmlProps) {
   const [hidden, setHidden] = useState(false);
+
+  return null;
 
   return (
     <Html

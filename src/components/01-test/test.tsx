@@ -14,7 +14,7 @@ import {
 import Label from "../label";
 import { useControls } from "leva";
 
-const segments = 64;
+const segments = 40;
 const vertexCount = (segments + 1) * (segments + 1);
 
 export default function Test(props: ThreeElements["group"]) {
@@ -34,11 +34,11 @@ export default function Test(props: ThreeElements["group"]) {
     const aRandom = attribute("aRandom", "float");
     // Wave animation
     const wave = sin(
-      positionLocal.x.add(time.mul(waveSpeed)).mul(waveFrequency)
+      positionLocal.x.add(time.mul(waveSpeed)).mul(waveFrequency),
     ).mul(0.1);
     // Random spikes + Wave animation
     const positionNode = positionLocal.add(
-      vec3(0.0, 0.0, wave.add(aRandom.mul(randomFactor)))
+      vec3(0.0, 0.0, wave.add(aRandom.mul(randomFactor))),
     );
 
     /* Colors */
@@ -85,7 +85,7 @@ export default function Test(props: ThreeElements["group"]) {
         },
       },
     },
-    { collapsed: true }
+    { collapsed: true },
   );
 
   return (
