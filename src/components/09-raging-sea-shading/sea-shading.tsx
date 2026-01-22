@@ -1,8 +1,8 @@
 import { type ThreeElements } from "@react-three/fiber";
 import { DoubleSide } from "three";
-import { useSeaControls, useSeaMaterial } from "./sea-hooks";
+import { useSeaControls, useSeaMaterial } from "./sea-shading-hooks";
 
-export default function Sea(props: ThreeElements["group"]) {
+export default function SeaShading(props: ThreeElements["group"]) {
   const { nodes, uniforms } = useSeaMaterial();
   useSeaControls(uniforms);
 

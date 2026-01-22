@@ -1,4 +1,3 @@
-"use client";
 import { type ThreeElements } from "@react-three/fiber";
 import { useMemo, useRef } from "react";
 import { DoubleSide } from "three";
@@ -11,7 +10,6 @@ import {
   uv,
   vec3,
 } from "three/tsl";
-import Label from "../label";
 import { useControls } from "leva";
 
 const segments = 40;
@@ -90,7 +88,6 @@ export default function Test(props: ThreeElements["group"]) {
 
   return (
     <group {...props}>
-      <Label>1</Label>
       <mesh>
         <planeGeometry args={[1, 1, segments, segments]}>
           <bufferAttribute

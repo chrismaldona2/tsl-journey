@@ -1,18 +1,20 @@
-"use client";
-import { useIsClient } from "@/hooks/useIsClient";
 import { Canvas as FiberCanvas, extend } from "@react-three/fiber";
-import { MeshBasicNodeMaterial, WebGPURenderer } from "three/webgpu";
-import { OrbitControls, Stats } from "@react-three/drei";
-import Scene from "./scene";
+import {
+  MeshBasicNodeMaterial,
+  PointsNodeMaterial,
+  SpriteNodeMaterial,
+  WebGPURenderer,
+} from "three/webgpu";
+import { OrbitControls } from "@react-three/drei";
+import type { ReactNode } from "react";
 
 extend({
   MeshBasicNodeMaterial: MeshBasicNodeMaterial,
+  PointsNodeMaterial: PointsNodeMaterial,
+  SpriteNodeMaterial: SpriteNodeMaterial,
 });
 
-export default function Canvas() {
-  const isClient = useIsClient();
-  if (!isClient) return null;
-
+export default function Canvas({ children }: { children: ReactNode }) {
   return (
     <FiberCanvas
       style={{
@@ -33,11 +35,10 @@ export default function Canvas() {
         await renderer.init();
         return renderer;
       }}
-      camera={{ position: [8, 1, 2.5] }}
+      camera={{ position: [15.5, 1, 2.5] }}
     >
-      <Stats />
-      <Scene />
-      <OrbitControls makeDefault target={[8, 0, 0]} />
+      <OrbitControls makeDefault target={[15.5, 0, 0]} />
+      {children}
     </FiberCanvas>
   );
 }

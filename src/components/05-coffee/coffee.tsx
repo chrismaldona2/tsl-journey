@@ -1,8 +1,6 @@
-"use client";
 import { useGLTF } from "@react-three/drei";
-import { ThreeElements } from "@react-three/fiber";
+import { type ThreeElements } from "@react-three/fiber";
 import { DoubleSide, Mesh } from "three";
-import Label from "../label";
 import { useCoffeeSteamControls, useCoffeeSteamMaterial } from "./coffee-hooks";
 
 export default function Coffee(props: ThreeElements["group"]) {
@@ -13,8 +11,6 @@ export default function Coffee(props: ThreeElements["group"]) {
 
   return (
     <group {...props}>
-      <Label>5</Label>
-
       {/* Coffee Cup */}
       <mesh
         geometry={(gltfNodes.baked as Mesh).geometry}

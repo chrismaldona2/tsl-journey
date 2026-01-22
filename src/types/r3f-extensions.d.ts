@@ -1,4 +1,8 @@
-import { MeshBasicNodeMaterial } from "three/webgpu";
+import {
+  MeshBasicNodeMaterial,
+  PointsNodeMaterial,
+  SpriteNodeMaterial,
+} from "three/webgpu";
 import type { MaterialNode } from "@react-three/fiber";
 
 declare module "@react-three/fiber" {
@@ -6,6 +10,14 @@ declare module "@react-three/fiber" {
     meshBasicNodeMaterial: MaterialNode<
       MeshBasicNodeMaterial,
       typeof MeshBasicNodeMaterial
+    >;
+    pointsNodeMaterial: MaterialNode<
+      PointsNodeMaterial,
+      typeof PointsNodeMaterial
+    >;
+    spriteNodeMaterial: MaterialNode<
+      SpriteNodeMaterial,
+      typeof SpriteNodeMaterial
     >;
   }
 }

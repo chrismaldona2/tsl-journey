@@ -1,4 +1,3 @@
-import { random2D } from "@/shaders/random";
 import { useControls } from "leva";
 import { useMemo, useRef } from "react";
 import {
@@ -15,6 +14,7 @@ import {
   sin,
   div,
 } from "three/tsl";
+import { random2D } from "../../shaders/random";
 
 export function useHologramMaterial() {
   return useMemo(() => {

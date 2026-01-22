@@ -19,47 +19,52 @@ export function useSeaMaterial() {
   const foamTexture = useTexture("/textures/foam.webp");
 
   return useMemo(() => {
-    /* Uniforms */
-    const surfaceColor = uniform(color("#01c4d2"));
-    const depthColor = uniform(color("#2a7eb7"));
-    const colorOffset = uniform(0.08);
-    const colorMultiplier = uniform(5);
-    const foamColor = uniform(color("#ffffff"));
-    const foamThreshold = uniform(0.02);
-    const foamSmoothness = uniform(0.05);
-    const waveFrequency = uniform(vec2(4, 4));
-    const waveAmplitude = uniform(0.06);
-    const waveSpeed = uniform(0.4);
-    const noiseIterations = uniform(4);
-    const noiseFrequency = uniform(2);
-    const noiseStrength = uniform(0.15);
-    const edgeCut = uniform(0.2);
+    const uniforms = {
+      surfaceColor: uniform(color("#01c4d2")),
+      depthColor: uniform(color("#2a7eb7")),
+      colorOffset: uniform(0.08),
+      colorMultiplier: uniform(5),
+      foamColor: uniform(color("#ffffff")),
+      foamThreshold: uniform(0.02),
+      foamSmoothness: uniform(0.05),
+      waveFrequency: uniform(vec2(4, 4)),
+      waveAmplitude: uniform(0.06),
+      waveSpeed: uniform(0.4),
+      noiseIterations: uniform(4),
+      noiseFrequency: uniform(2),
+      noiseStrength: uniform(0.15),
+      edgeCut: uniform(0.2),
+    };
 
     /* Waves Generation */
     const waveElevation = getWaveElevation({
       position: positionLocal,
-      waveFrequency,
-      waveAmplitude,
-      waveSpeed,
-      noiseIterations,
-      noiseFrequency,
-      noiseStrength,
+      waveFrequency: uniforms.waveFrequency,
+      waveAmplitude: uniforms.waveAmplitude,
+      waveSpeed: uniforms.waveSpeed,
+      noiseIterations: uniforms.noiseIterations,
+      noiseFrequency: uniforms.noiseFrequency,
+      noiseStrength: uniforms.noiseStrength,
     });
     const positionNode = positionLocal.add(vec3(0, 0, waveElevation));
 
+    /* Water Color */
+    const colorMixFactor = waveElevation
+      .add(uniforms.colorOffset)
+      .mul(uniforms.colorMultiplier);
+    const waterColor = mix(
+      uniforms.depthColor,
+      uniforms.surfaceColor,
+      colorMixFactor.smoothstep(0, 1),
+    );
     /* Foam */
     const heightMask = smoothstep(
-      foamThreshold,
-      foamThreshold.add(foamSmoothness),
+      uniforms.foamThreshold,
+      uniforms.foamThreshold.add(uniforms.foamSmoothness),
       waveElevation,
     );
     const foamMask = texture(foamTexture, uv()).r.mul(heightMask);
-
-    /* Color */
-    const colorMixFactor = waveElevation.add(colorOffset).mul(colorMultiplier);
-    const waterColor = mix(depthColor, surfaceColor, colorMixFactor.saturate());
-
-    const colorNode = mix(waterColor, foamColor, foamMask);
+    const colorNode = mix(waterColor, uniforms.foamColor, foamMask);
 
     /* Borders Fade */
     const coords = uv();
@@ -67,26 +72,11 @@ export function useSeaMaterial() {
       coords.x.min(coords.x.oneMinus()),
       coords.y.min(coords.y.oneMinus()),
     );
-    const opacityNode = smoothstep(0, edgeCut, distToEdge);
+    const opacityNode = smoothstep(0, uniforms.edgeCut, distToEdge);
 
     return {
       nodes: { colorNode, positionNode, opacityNode },
-      uniforms: {
-        surfaceColor,
-        depthColor,
-        colorOffset,
-        colorMultiplier,
-        foamColor,
-        foamThreshold,
-        foamSmoothness,
-        waveFrequency,
-        waveAmplitude,
-        waveSpeed,
-        noiseIterations,
-        noiseFrequency,
-        noiseStrength,
-        edgeCut,
-      },
+      uniforms,
     };
   }, [foamTexture]);
 }
