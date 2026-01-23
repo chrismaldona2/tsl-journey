@@ -1,46 +1,27 @@
-// @refresh reset
 import { useGLTF } from "@react-three/drei";
 import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { useRef } from "react";
-import { DoubleSide, Vector3, type Mesh } from "three";
-
-import {
-  useLightsShadingControls,
-  useLightsShadingMaterial,
-} from "./lights-shading-hooks";
+import { type Mesh } from "three";
+import { useLightsShadingMaterial } from "./hooks/use-lights-shading-material";
+import { useLightsShadingControls } from "./hooks/use-lights-shading-controls";
+import WorldLightHelper from "../helpers/world-light-helper";
 
 type FishesGLBNodes = {
   koi: Mesh;
   whale: Mesh;
 };
 
-const vec = new Vector3();
-
 export default function LightsShading(props: ThreeElements["group"]) {
   const models = useGLTF("/models/fishes.glb", "/draco/")
     .nodes as FishesGLBNodes;
 
   const { nodes, uniforms } = useLightsShadingMaterial();
-  useLightsShadingControls(uniforms);
+  const { dirLgtHelperRef, pointLgtHelperRef } =
+    useLightsShadingControls(uniforms);
 
   const koiRef = useRef<Mesh>(null);
-  const pointLightHelper = useRef<Mesh>(null);
-  const directionalLightHelper = useRef<Mesh>(null);
   useFrame(({ clock }) => {
-    if (
-      !koiRef.current ||
-      !pointLightHelper.current ||
-      !directionalLightHelper.current
-    )
-      return;
-
-    uniforms.pointLight.position.value.copy(
-      pointLightHelper.current.getWorldPosition(vec),
-    );
-
-    uniforms.directionalLight.position.value.copy(
-      directionalLightHelper.current.getWorldPosition(vec),
-    );
+    if (!koiRef.current) return;
 
     koiRef.current.rotation.y = clock.elapsedTime * 0.25;
   });
@@ -56,23 +37,16 @@ export default function LightsShading(props: ThreeElements["group"]) {
       </mesh>
 
       {/* Helpers */}
-      <mesh
-        ref={pointLightHelper}
-        position={uniforms.pointLight.position.value}
-      >
-        <sphereGeometry args={[0.075, 16, 16]} />
-        <meshBasicNodeMaterial colorNode={uniforms.pointLight.color} />
-      </mesh>
-      <mesh
-        ref={directionalLightHelper}
-        position={uniforms.directionalLight.position.value}
-      >
-        <sphereGeometry args={[0.15, 16, 16]} />
-        <meshBasicNodeMaterial
-          side={DoubleSide}
-          colorNode={uniforms.directionalLight.color}
-        />
-      </mesh>
+      <WorldLightHelper
+        ref={dirLgtHelperRef}
+        color={uniforms.directionalLight.color}
+        scale={0.15}
+      />
+      <WorldLightHelper
+        ref={pointLgtHelperRef}
+        color={uniforms.pointLight.color}
+        scale={0.075}
+      />
     </group>
   );
 }

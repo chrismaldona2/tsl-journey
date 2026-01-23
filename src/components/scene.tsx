@@ -6,6 +6,7 @@ import Hologram from "./06-hologram/hologram";
 import Fireworks from "./07-fireworks/fireworks";
 import LightsShading from "./08-lights-shading/lights-shading";
 import SeaShading from "./09-raging-sea-shading/sea-shading";
+import HalftoneShading from "./10-halftone-shading/halftone-shading";
 
 const SketchesGap = 2;
 
@@ -20,6 +21,7 @@ export default function Scene() {
       <Fireworks position-x={SketchesGap * 5} />
       <LightsShading position-x={SketchesGap * 6} />
       <SeaShading position-x={SketchesGap * 7.8} />
+      <HalftoneShading position-x={SketchesGap * 8.8} />
     </>
   );
 }

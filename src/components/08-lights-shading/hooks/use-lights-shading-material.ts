@@ -7,31 +7,29 @@ import {
   positionWorld,
   normalWorld,
 } from "three/tsl";
-import { ambientLight, directionalLight, pointLight } from "./nodes";
-import { folder, useControls } from "leva";
+import { ambientLight, directionalLight, pointLight } from "../nodes";
+import { LightShadingConfig as config } from "../config";
 
 export function useLightsShadingMaterial() {
   return useMemo(() => {
     const uniforms = {
-      mesh: {
-        color: uniform(color("#ffffff")),
-      },
       ambientLight: {
-        color: uniform(color("#ffffff")),
-        intensity: uniform(0.03),
+        color: uniform(color(config.ambientLight.color)),
+        intensity: uniform(config.ambientLight.intensity),
       },
       directionalLight: {
-        color: uniform(color(0.1, 0.1, 1)),
-        position: uniform(vec3(0.75, 0, 1.5)),
-        intensity: uniform(1),
-        specularPower: uniform(20),
+        color: uniform(color(config.directionalLight.color)),
+        intensity: uniform(config.directionalLight.intensity),
+        position: uniform(vec3(...config.directionalLight.position)),
+        target: uniform(vec3(...config.directionalLight.target)),
+        specularPower: uniform(config.directionalLight.specularPower),
       },
       pointLight: {
-        position: uniform(vec3(0, 1, -0.2)),
-        color: uniform(color(1, 0.1, 0.1)),
-        intensity: uniform(1),
-        decay: uniform(0.6),
-        specularPower: uniform(20),
+        color: uniform(color(config.pointLight.color)),
+        intensity: uniform(config.pointLight.intensity),
+        position: uniform(vec3(...config.pointLight.position)),
+        decay: uniform(config.pointLight.decay),
+        specularPower: uniform(config.pointLight.specularPower),
       },
     };
 
@@ -46,6 +44,7 @@ export function useLightsShadingMaterial() {
       lightColor: uniforms.directionalLight.color,
       lightIntensity: uniforms.directionalLight.intensity,
       lightPosition: uniforms.directionalLight.position,
+      lightTarget: uniforms.directionalLight.target,
       normal: normalWorld,
       viewDirection,
       specularPower: uniforms.directionalLight.specularPower,
@@ -64,7 +63,7 @@ export function useLightsShadingMaterial() {
 
     const lights = vec3(0).add(pointLgt).add(directionalLgt).add(ambientLgt);
 
-    const colorNode = uniforms.mesh.color.mul(lights);
+    const colorNode = color("#ffffff").mul(lights);
 
     return {
       nodes: {
@@ -73,22 +72,4 @@ export function useLightsShadingMaterial() {
       uniforms,
     };
   }, []);
-}
-
-type LightsShadingUniforms = ReturnType<
-  typeof useLightsShadingMaterial
->["uniforms"];
-
-export function useLightsShadingControls(uniforms: LightsShadingUniforms) {
-  return useControls("✨ 9 — Lights Shading", {
-    "Ambient Light": folder({
-      ambLightColor: {
-        label: "Color",
-        value: "#ffffff",
-        onChange: (v) => {
-          uniforms.ambientLight.color.value.set(v);
-        },
-      },
-    }),
-  });
 }

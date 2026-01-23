@@ -10,12 +10,7 @@ export default function Sea(props: ThreeElements["group"]) {
     <group {...props}>
       <mesh rotation-x={-Math.PI / 2} position-y={-0.1}>
         <planeGeometry args={[1.5, 1.5, 50, 50]} />
-        <meshBasicNodeMaterial
-          side={DoubleSide}
-          depthWrite={false}
-          transparent
-          {...nodes}
-        />
+        <meshBasicNodeMaterial side={DoubleSide} transparent {...nodes} />
       </mesh>
     </group>
   );

@@ -18,6 +18,7 @@ export const directionalLight = Fn(
     lightColor,
     lightIntensity,
     lightPosition,
+    lightTarget,
     normal,
     viewDirection,
     specularPower,
@@ -25,13 +26,14 @@ export const directionalLight = Fn(
     lightColor: Node;
     lightIntensity: Node;
     lightPosition: Node;
+    lightTarget: Node;
     normal: Node;
     viewDirection: Node;
     specularPower: Node;
   }) => {
     const n = normal.normalize();
 
-    const lightDirection = lightPosition.normalize();
+    const lightDirection = lightPosition.sub(lightTarget).normalize();
 
     const reflection = lightDirection.negate().reflect(n);
     const specular = reflection

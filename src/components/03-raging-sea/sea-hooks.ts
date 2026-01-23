@@ -14,26 +14,27 @@ import {
 import { getWaveElevation } from "./sea-nodes";
 import { useTexture } from "@react-three/drei";
 import { useControls } from "leva";
+import { SeaConfig as config } from "./config";
 
 export function useSeaMaterial() {
   const foamTexture = useTexture("/textures/foam.webp");
 
   return useMemo(() => {
     const uniforms = {
-      surfaceColor: uniform(color("#01c4d2")),
-      depthColor: uniform(color("#2a7eb7")),
-      colorOffset: uniform(0.08),
-      colorMultiplier: uniform(5),
-      foamColor: uniform(color("#ffffff")),
-      foamThreshold: uniform(0.02),
-      foamSmoothness: uniform(0.05),
-      waveFrequency: uniform(vec2(4, 4)),
-      waveAmplitude: uniform(0.06),
-      waveSpeed: uniform(0.4),
-      noiseIterations: uniform(4),
-      noiseFrequency: uniform(2),
-      noiseStrength: uniform(0.15),
-      edgeCut: uniform(0.2),
+      surfaceColor: uniform(color(config.surfaceColor)),
+      depthColor: uniform(color(config.depthColor)),
+      colorOffset: uniform(config.colorOffset),
+      colorMultiplier: uniform(config.colorMultiplier),
+      foamColor: uniform(color(config.foamColor)),
+      foamThreshold: uniform(config.foamThreshold),
+      foamSmoothness: uniform(config.foamSmoothness),
+      waveFrequency: uniform(vec2(...config.waveFrequency)),
+      waveAmplitude: uniform(config.waveAmplitude),
+      waveSpeed: uniform(config.waveSpeed),
+      noiseIterations: uniform(config.noiseIterations),
+      noiseFrequency: uniform(config.noiseFrequency),
+      noiseStrength: uniform(config.noiseStrength),
+      edgeCut: uniform(config.edgeCut),
     };
 
     /* Waves Generation */
@@ -91,21 +92,21 @@ export function useSeaControls(uniforms: SeaUniforms) {
     {
       surfaceColor: {
         label: "Surface Color",
-        value: "#01c4d2",
+        value: config.surfaceColor,
         onChange: (v) => {
           uniformsRef.current.surfaceColor.value.set(v);
         },
       },
       depthColor: {
         label: "Depth Color",
-        value: "#2a7eb7",
+        value: config.depthColor,
         onChange: (v) => {
           uniformsRef.current.depthColor.value.set(v);
         },
       },
       colorOffset: {
         label: "Color Offset",
-        value: 0.08,
+        value: config.colorOffset,
         min: 0,
         max: 1,
         step: 0.01,
@@ -115,7 +116,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       colorMultiplier: {
         label: "Color Multiplier",
-        value: 5,
+        value: config.colorMultiplier,
         min: 0,
         max: 10,
         onChange: (v) => {
@@ -124,12 +125,12 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       foamColor: {
         label: "Foam Color",
-        value: "#ffffff",
+        value: config.foamColor,
         onChange: (v) => uniformsRef.current.foamColor.value.set(v),
       },
       foamThreshold: {
         label: "Foam Threshold",
-        value: 0.02,
+        value: config.foamThreshold,
         min: -0.1,
         max: 0.2,
         step: 0.001,
@@ -139,7 +140,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       foamSmoothness: {
         label: "Foam Smoothness",
-        value: 0.05,
+        value: config.foamSmoothness,
         min: 0.001,
         max: 0.2,
         step: 0.001,
@@ -149,12 +150,14 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       waveFrequency: {
         label: "Wave Frequency",
-        value: { x: 4, y: 4 },
-        onChange: (v) => uniformsRef.current.waveFrequency.value.set(v.x, v.y),
+        value: config.waveFrequency,
+        onChange: (v: typeof config.waveFrequency) => {
+          uniformsRef.current.waveFrequency.value.set(...v);
+        },
       },
       waveAmplitude: {
         label: "Wave Amplitude",
-        value: 0.06,
+        value: config.waveAmplitude,
         min: 0,
         max: 0.5,
         step: 0.001,
@@ -164,7 +167,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       waveSpeed: {
         label: "Wave Speed",
-        value: 0.4,
+        value: config.waveSpeed,
         min: 0,
         max: 2,
         onChange: (v) => {
@@ -173,7 +176,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       noiseIterations: {
         label: "Noise Iterations",
-        value: 4,
+        value: config.noiseIterations,
         min: 1,
         max: 8,
         step: 1,
@@ -183,7 +186,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       noiseFrequency: {
         label: "Noise Frequency",
-        value: 2,
+        value: config.noiseFrequency,
         min: 0,
         max: 10,
         onChange: (v) => {
@@ -192,7 +195,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       noiseStrength: {
         label: "Noise Strength",
-        value: 0.15,
+        value: config.noiseStrength,
         min: 0,
         max: 1,
         onChange: (v) => {
@@ -201,7 +204,7 @@ export function useSeaControls(uniforms: SeaUniforms) {
       },
       edgeCut: {
         label: "Edge Cut",
-        value: 0.2,
+        value: config.edgeCut,
         min: 0,
         max: 1,
         onChange: (v) => {

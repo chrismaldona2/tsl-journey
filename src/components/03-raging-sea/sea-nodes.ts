@@ -29,7 +29,7 @@ export const getWaveElevation = Fn(
       const index = i.add(1);
 
       const raw = mx_noise_float(
-        vec3(position.xy.mul(noiseFrequency.mul(index)), time.mul(0.2))
+        vec3(position.xy.mul(noiseFrequency.mul(index)), time.mul(0.2)),
       );
       const turbulence = abs(raw).mul(noiseStrength.div(index));
 
@@ -37,5 +37,5 @@ export const getWaveElevation = Fn(
     });
 
     return elevation;
-  }
+  },
 );
