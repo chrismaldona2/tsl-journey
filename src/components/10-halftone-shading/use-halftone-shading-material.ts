@@ -9,9 +9,12 @@ import {
   cameraPosition,
   float,
   screenSize,
+  vec2,
+  screenDPR,
 } from "three/tsl";
-import { ambientLight, pointLight } from "../08-lights-shading/nodes";
 import { HalftoneShadingConfig as config } from "./config";
+import { ambientLight } from "../../shaders/ambientLight";
+import { pointLight } from "../../shaders/pointLight";
 
 export default function useHalftoneShadingMaterial() {
   return useMemo(() => {
@@ -34,11 +37,17 @@ export default function useHalftoneShadingMaterial() {
       },
     };
 
+    /*
+     *
+     * Lights Shading
+     *
+     */
+    // Ambient Light
     const ambientLgt = ambientLight({
       lightIntensity: uniforms.ambientLight.intensity,
       lightColor: uniforms.ambientLight.color,
     });
-
+    // Point Light
     const viewDirection = cameraPosition.sub(positionWorld).normalize();
     const pointLgt = pointLight({
       lightPosition: uniforms.pointLight.position,
@@ -52,22 +61,28 @@ export default function useHalftoneShadingMaterial() {
     });
     const lights = vec3(0).add(ambientLgt).add(pointLgt);
 
+    /*
+     *
+     * Halftone Effect
+     *
+     */
+    // Intensity (Points Size)
     const halftoneDir = uniforms.halftone.direction.normalize();
     const normalDir = normalWorld.normalize();
-    const halftoneIntensity = normalDir.dot(halftoneDir).smoothstep(-0.8, 1.5);
+    const shadowIntensity = normalDir.dot(halftoneDir).smoothstep(-0.8, 1.5);
 
-    const uv = screenCoordinate.xy.div(screenSize.y).xy;
+    // Grid Pattern
+    const uv = screenCoordinate.xy.div(screenSize.y.mul(screenDPR));
     const grid = uv.mul(uniforms.halftone.repetitions).mod(1);
+
     const points = grid
-      .distance(0.5)
-      .step(float(0.5).mul(halftoneIntensity))
+      .distance(vec2(0.5))
+      .step(float(0.5).mul(shadowIntensity))
       .oneMinus();
 
-    const colorNode = color("#e3643e")
-      .mix(uniforms.halftone.color, points)
-      .mul(lights);
-
-    // const colorNode = points;
+    // Final Color
+    const litColor = color("green").mul(lights);
+    const colorNode = litColor.mix(uniforms.halftone.color, points);
 
     return {
       nodes: {

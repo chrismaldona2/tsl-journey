@@ -14,7 +14,7 @@ import {
   sin,
   div,
 } from "three/tsl";
-import { random2D } from "../../shaders/random";
+import { random2D } from "../../shaders/random2D";
 
 export function useHologramMaterial() {
   return useMemo(() => {

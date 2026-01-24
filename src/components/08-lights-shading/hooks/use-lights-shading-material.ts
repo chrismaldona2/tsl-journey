@@ -7,8 +7,10 @@ import {
   positionWorld,
   normalWorld,
 } from "three/tsl";
-import { ambientLight, directionalLight, pointLight } from "../nodes";
 import { LightShadingConfig as config } from "../config";
+import { ambientLight } from "../../../shaders/ambientLight";
+import { directionalLight } from "../../../shaders/directionalLight";
+import { pointLight } from "../../../shaders/pointLight";
 
 export function useLightsShadingMaterial() {
   return useMemo(() => {

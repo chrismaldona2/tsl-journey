@@ -12,6 +12,11 @@ export default function HalftoneShading(props: ThreeElements["group"]) {
       <mesh position-y={-0.2} geometry={model.geometry}>
         <meshBasicNodeMaterial {...nodes} />
       </mesh>
+
+      <mesh scale={0.3} position={[1.5, -0.2, 0]}>
+        <sphereGeometry />
+        <meshBasicMaterial {...nodes} />
+      </mesh>
     </group>
   );
 }

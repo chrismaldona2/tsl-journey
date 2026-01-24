@@ -21,9 +21,9 @@ export type HalftoneShadingSettings = {
 
 export const HalftoneShadingConfig: HalftoneShadingSettings = {
   halftone: {
-    repetition: 75,
+    repetition: 100,
     direction: [0, -1, 0],
-    color: "#75179c",
+    color: "purple",
   },
   ambientLight: {
     color: "#ffffff",
@@ -32,7 +32,7 @@ export const HalftoneShadingConfig: HalftoneShadingSettings = {
   pointLight: {
     color: "#ffffff",
     intensity: 1.5,
-    position: [17, 0.5, -0.5],
+    position: [17.5, 0.25, 0],
     decay: 0.5,
     specularPower: 50,
   },
