@@ -18,7 +18,7 @@ import {
 } from "three/tsl";
 import { getWaveElevation } from "../../03-raging-sea/sea-nodes";
 import { SeaShadingConfig as config } from "../config";
-import { pointLight } from "../../../shaders/pointLight";
+import { pointLight } from "../../../shaders/lights";
 
 export function useSeaShadingMaterial() {
   const foamTexture = useTexture("/textures/foam.webp");

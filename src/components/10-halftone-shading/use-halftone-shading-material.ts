@@ -13,8 +13,7 @@ import {
   screenDPR,
 } from "three/tsl";
 import { HalftoneShadingConfig as config } from "./config";
-import { ambientLight } from "../../shaders/ambientLight";
-import { pointLight } from "../../shaders/pointLight";
+import { ambientLight, pointLight } from "../../shaders/lights";
 
 export default function useHalftoneShadingMaterial() {
   return useMemo(() => {
