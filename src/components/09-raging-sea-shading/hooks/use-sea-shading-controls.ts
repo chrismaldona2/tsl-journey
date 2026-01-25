@@ -2,7 +2,7 @@
 import { useControls, folder } from "leva";
 import { useRef } from "react";
 import type { useSeaShadingMaterial } from "./use-sea-shading-material";
-import { SeaShadingConfig as config } from "../config";
+import { seaShadingConfig as config } from "../config";
 import type { Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
 

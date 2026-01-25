@@ -1,10 +1,17 @@
 import type { Vector3Tuple } from "three";
 
-export type HalftoneShadingSettings = {
+type HalftonePassParams = {
+  density: number;
+  direction: Vector3Tuple;
+  color: string;
+  maskLow: number;
+  maskHigh: number;
+};
+
+export type HalftoneShadingParams = {
   halftone: {
-    repetition: number;
-    direction: Vector3Tuple;
-    color: string;
+    shadows: HalftonePassParams;
+    highlights: HalftonePassParams;
   };
   ambientLight: {
     color: string;
@@ -19,11 +26,22 @@ export type HalftoneShadingSettings = {
   };
 };
 
-export const HalftoneShadingConfig: HalftoneShadingSettings = {
+export const HalftoneShadingConfig: HalftoneShadingParams = {
   halftone: {
-    repetition: 100,
-    direction: [0, -1, 0],
-    color: "purple",
+    shadows: {
+      density: 100,
+      direction: [0, -1, 0],
+      color: "purple",
+      maskLow: -0.8,
+      maskHigh: 1.5,
+    },
+    highlights: {
+      density: 120,
+      direction: [0, 1, 0],
+      color: "#ffffff",
+      maskLow: 0.5,
+      maskHigh: 1.0,
+    },
   },
   ambientLight: {
     color: "#ffffff",

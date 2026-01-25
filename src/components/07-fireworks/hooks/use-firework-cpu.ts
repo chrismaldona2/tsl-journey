@@ -1,12 +1,16 @@
 /* eslint-disable react-hooks/purity */
 import { useMemo, useEffect } from "react";
 import { Spherical, Vector3, InstancedBufferAttribute } from "three";
-import { instancedBufferAttribute, uv, vec2, mix, texture } from "three/tsl";
 import {
-  FireworkDefaultSettings,
-  getFireworkUniforms,
-  type FireworkSettings,
-} from "../config";
+  instancedBufferAttribute,
+  uv,
+  vec2,
+  mix,
+  texture,
+  uniform,
+  color,
+} from "three/tsl";
+import { fireworkConfig as config, type FireworkParams } from "../config";
 import { useRandomFireworkTex } from "./use-random-firework-tex";
 import gsap from "gsap";
 import {
@@ -15,34 +19,48 @@ import {
   getScalingFactor,
   getTwinklingFactor,
 } from "../nodes";
+import type { UniformSet } from "@/types/uniforms";
 
 /*
  *
  * "CPU" refers to the data (initial positions and sizes) generation strategy, not the rendering or animation.
  *
  */
-
 type UseFireworkCPUProps = {
-  settings?: Partial<FireworkSettings>;
+  params?: Partial<FireworkParams>;
   onAnimationComplete?: () => void;
 };
 
 export function useFireworkCPU({
-  settings,
+  params,
   onAnimationComplete,
 }: UseFireworkCPUProps) {
   const sparkTexture = useRandomFireworkTex();
 
   const { nodes, uniforms } = useMemo(() => {
-    const uniforms = getFireworkUniforms(settings);
+    const merged = { ...config, ...params };
+    const uniforms: UniformSet<
+      Omit<FireworkParams, "fullGPU" | "particleCount">
+    > = {
+      insideColor: uniform(color(merged.insideColor)),
+      outsideColor: uniform(color(merged.outsideColor)),
+      colorBias: uniform(merged.colorBias),
+      particleSize: uniform(merged.particleSize),
+      explosionRadius: uniform(merged.explosionRadius),
+      explosionEasing: uniform(merged.explosionEasing),
+      fallEasing: uniform(merged.fallEasing),
+      twinkleAmplitude: uniform(merged.twinkleAmplitude),
+      twinkleFrequency: uniform(merged.twinkleFrequency),
+      progress: uniform(merged.progress),
+    };
 
     /*
      *
      * Data Generation
      *
      */
-    const particleCount =
-      settings?.particleCount ?? FireworkDefaultSettings.particleCount;
+    const particleCount = merged.particleCount;
+
     const arrays = {
       positions: new Float32Array(particleCount * 3),
       sizes: new Float32Array(particleCount),
@@ -143,7 +161,7 @@ export function useFireworkCPU({
       },
       uniforms,
     };
-  }, [settings, sparkTexture]);
+  }, [params, sparkTexture]);
 
   useEffect(() => {
     if (!uniforms.progress) return;

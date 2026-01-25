@@ -1,16 +1,16 @@
 import type { ThreeEvent } from "@react-three/fiber";
 import { useState, useCallback } from "react";
 import type { Vector3Tuple } from "three";
-import { toVector3Tuple } from "../../../lib/vector";
-import type { FireworkSettings } from "../config";
+import { toVector3Tuple } from "@/lib/vector";
+import type { FireworkParams } from "../config";
 
 type FireworkInstance = {
   id: number;
   position: Vector3Tuple;
-  settings?: Partial<FireworkSettings>;
+  params?: Partial<FireworkParams>;
 };
 
-export function useFireworkTrigger(fireworkSettings?: FireworkSettings) {
+export function useFireworkTrigger(params?: Omit<FireworkParams, "progress">) {
   const [fireworkQueue, setFireworkQueue] = useState<FireworkInstance[]>([]);
 
   const triggerFirework = useCallback(
@@ -25,12 +25,9 @@ export function useFireworkTrigger(fireworkSettings?: FireworkSettings) {
 
       const id = Math.floor(Math.random() * 1000000);
       const position = toVector3Tuple(clickPoint);
-      setFireworkQueue((prev) => [
-        ...prev,
-        { id, position, settings: fireworkSettings },
-      ]);
+      setFireworkQueue((prev) => [...prev, { id, position, params }]);
     },
-    [fireworkSettings],
+    [params],
   );
 
   const removeFirework = useCallback(

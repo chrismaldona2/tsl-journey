@@ -30,8 +30,8 @@ export default function Fireworks(props: ThreeElements["group"]) {
       </mesh>
 
       <Suspense fallback={null}>
-        {fireworkQueue.map(({ id, position, settings }) => {
-          const Component = settings?.fullGPU
+        {fireworkQueue.map(({ id, position, params }) => {
+          const Component = params?.fullGPU
             ? FireworkParticlesGPU
             : FireworkParticlesCPU;
 
@@ -39,7 +39,7 @@ export default function Fireworks(props: ThreeElements["group"]) {
             <Component
               key={id}
               position={position}
-              settings={settings}
+              params={params}
               onComplete={() => removeFirework(id)}
             />
           );

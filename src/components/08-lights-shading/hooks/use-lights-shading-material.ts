@@ -7,16 +7,16 @@ import {
   positionWorld,
   normalWorld,
 } from "three/tsl";
-import { LightShadingConfig as config } from "../config";
 import {
-  ambientLight,
-  directionalLight,
-  pointLight,
-} from "../../../shaders/lights";
+  lightShadingConfig as config,
+  type LightShadingParams,
+} from "../config";
+import { ambientLight, directionalLight, pointLight } from "@/shaders/lights";
+import type { UniformSet } from "@/types/uniforms";
 
 export function useLightsShadingMaterial() {
   return useMemo(() => {
-    const uniforms = {
+    const uniforms: UniformSet<LightShadingParams> = {
       ambientLight: {
         color: uniform(color(config.ambientLight.color)),
         intensity: uniform(config.ambientLight.intensity),

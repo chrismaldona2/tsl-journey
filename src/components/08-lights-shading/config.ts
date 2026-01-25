@@ -1,6 +1,6 @@
 import type { Vector3Tuple } from "three";
 
-type LightShadingSettings = {
+export type LightShadingParams = {
   ambientLight: {
     color: string;
     intensity: number;
@@ -21,7 +21,7 @@ type LightShadingSettings = {
   };
 };
 
-export const LightShadingConfig: LightShadingSettings = {
+export const lightShadingConfig: LightShadingParams = {
   ambientLight: {
     color: "#ffffff",
     intensity: 0.03,

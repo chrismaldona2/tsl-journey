@@ -19,17 +19,17 @@ export const directionalLight = Fn(
     lightIntensity,
     lightPosition,
     lightTarget,
+    specularPower,
     normal,
     viewDirection,
-    specularPower,
   }: {
     lightColor: Node;
     lightIntensity: Node;
     lightPosition: Node;
     lightTarget: Node;
+    specularPower: Node;
     normal: Node;
     viewDirection: Node;
-    specularPower: Node;
   }) => {
     const n = normal.normalize();
 

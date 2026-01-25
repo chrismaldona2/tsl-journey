@@ -1,6 +1,6 @@
 import type { Vector2Tuple, Vector3Tuple } from "three";
 
-export type SeaShadingSettings = {
+export type SeaShadingParams = {
   water: {
     surfaceColor: string;
     depthColor: string;
@@ -27,7 +27,7 @@ export type SeaShadingSettings = {
   };
 };
 
-export const SeaShadingConfig: SeaShadingSettings = {
+export const seaShadingConfig: SeaShadingParams = {
   water: {
     surfaceColor: "#01c4d2",
     depthColor: "#2a7eb7",

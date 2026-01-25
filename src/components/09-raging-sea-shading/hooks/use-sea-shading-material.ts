@@ -16,15 +16,16 @@ import {
   cross,
   vec4,
 } from "three/tsl";
-import { getWaveElevation } from "../../03-raging-sea/sea-nodes";
-import { SeaShadingConfig as config } from "../config";
-import { pointLight } from "../../../shaders/lights";
+import { seaShadingConfig as config, type SeaShadingParams } from "../config";
+import { getWaveElevation } from "@/components/03-raging-sea/nodes";
+import { pointLight } from "@/shaders/lights";
+import type { UniformSet } from "@/types/uniforms";
 
 export function useSeaShadingMaterial() {
   const foamTexture = useTexture("/textures/foam.webp");
 
   return useMemo(() => {
-    const uniforms = {
+    const uniforms: UniformSet<SeaShadingParams> = {
       water: {
         surfaceColor: uniform(color(config.water.surfaceColor)),
         depthColor: uniform(color(config.water.depthColor)),

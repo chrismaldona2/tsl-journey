@@ -1,6 +1,6 @@
 import type { Vector2Tuple } from "three";
 
-export type SeaSettings = {
+export type RagingSeaParams = {
   surfaceColor: string;
   depthColor: string;
   colorOffset: number;
@@ -17,7 +17,7 @@ export type SeaSettings = {
   edgeCut: number;
 };
 
-export const SeaConfig: SeaSettings = {
+export const RagingSeaConfig: RagingSeaParams = {
   surfaceColor: "#01c4d2",
   depthColor: "#2a7eb7",
   colorOffset: 0.08,

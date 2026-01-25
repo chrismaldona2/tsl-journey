@@ -1,22 +1,25 @@
 import type { Vector3Tuple } from "three";
 import { useFireworkGPU } from "./hooks/use-firework-gpu";
-import { FireworkDefaultSettings, type FireworkSettings } from "./config";
+import { fireworkConfig, type FireworkParams } from "./config";
 
 type FireworkParticlesCPUProps = {
   position?: Vector3Tuple;
-  settings?: Partial<FireworkSettings>;
+  params?: Partial<FireworkParams>;
   onComplete?: () => void;
 };
 
 export default function FireworkParticlesGPU({
   position = [0, 0, 0],
-  settings = FireworkDefaultSettings,
+  params,
   onComplete,
 }: FireworkParticlesCPUProps) {
-  const nodes = useFireworkGPU({ onAnimationComplete: onComplete, settings });
+  const nodes = useFireworkGPU({ onAnimationComplete: onComplete, params });
 
   return (
-    <sprite count={settings.particleCount} position={position}>
+    <sprite
+      count={params?.particleCount ?? fireworkConfig.particleCount}
+      position={position}
+    >
       <pointsNodeMaterial depthWrite={false} transparent={true} {...nodes} />
     </sprite>
   );

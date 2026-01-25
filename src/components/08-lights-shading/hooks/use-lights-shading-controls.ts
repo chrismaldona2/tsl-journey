@@ -4,7 +4,7 @@ import { useRef } from "react";
 import type { useLightsShadingMaterial } from "./use-lights-shading-material";
 import { type Mesh } from "three";
 import { useFrame } from "@react-three/fiber";
-import { LightShadingConfig as config } from "../config";
+import { lightShadingConfig as config } from "../config";
 
 export type LightsShadingUniforms = ReturnType<
   typeof useLightsShadingMaterial

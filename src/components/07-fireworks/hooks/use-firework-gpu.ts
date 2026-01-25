@@ -13,8 +13,9 @@ import {
   mix,
   texture,
   hash,
+  color,
+  uniform,
 } from "three/tsl";
-import { getFireworkUniforms, type FireworkSettings } from "../config";
 import { useRandomFireworkTex } from "./use-random-firework-tex";
 import {
   getExplosionFactor,
@@ -23,20 +24,36 @@ import {
   getTwinklingFactor,
 } from "../nodes";
 import gsap from "gsap";
+import { fireworkConfig as config, type FireworkParams } from "../config";
+import type { UniformSet } from "@/types/uniforms";
 
 type UseFireworkGPUProps = {
-  settings?: Partial<FireworkSettings>;
+  params?: Partial<FireworkParams>;
   onAnimationComplete?: () => void;
 };
 
 export function useFireworkGPU({
-  settings,
+  params,
   onAnimationComplete,
 }: UseFireworkGPUProps) {
   const sparkTexture = useRandomFireworkTex();
 
   const { nodes, uniforms } = useMemo(() => {
-    const uniforms = getFireworkUniforms(settings);
+    const merged = { ...config, ...params };
+    const uniforms: UniformSet<
+      Omit<FireworkParams, "fullGPU" | "particleCount">
+    > = {
+      insideColor: uniform(color(merged.insideColor)),
+      outsideColor: uniform(color(merged.outsideColor)),
+      colorBias: uniform(merged.colorBias),
+      particleSize: uniform(merged.particleSize),
+      explosionRadius: uniform(merged.explosionRadius),
+      explosionEasing: uniform(merged.explosionEasing),
+      fallEasing: uniform(merged.fallEasing),
+      twinkleAmplitude: uniform(merged.twinkleAmplitude),
+      twinkleFrequency: uniform(merged.twinkleFrequency),
+      progress: uniform(merged.progress),
+    };
 
     const seed = Math.floor(Math.random() * 10000);
     const i = instanceIndex;
@@ -133,7 +150,7 @@ export function useFireworkGPU({
       },
       uniforms,
     };
-  }, [settings, sparkTexture]);
+  }, [params, sparkTexture]);
 
   useEffect(() => {
     if (!uniforms.progress) return;

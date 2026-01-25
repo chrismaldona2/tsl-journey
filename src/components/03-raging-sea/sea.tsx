@@ -1,10 +1,11 @@
 import { type ThreeElements } from "@react-three/fiber";
 import { DoubleSide } from "three";
-import { useSeaControls, useSeaMaterial } from "./sea-hooks";
+import { useRagingSeaMaterial } from "./hooks/use-raging-sea-material";
+import { useRagingSeaControls } from "./hooks/use-raging-sea-controls";
 
 export default function Sea(props: ThreeElements["group"]) {
-  const { nodes, uniforms } = useSeaMaterial();
-  useSeaControls(uniforms);
+  const { nodes, uniforms } = useRagingSeaMaterial();
+  useRagingSeaControls(uniforms);
 
   return (
     <group {...props}>

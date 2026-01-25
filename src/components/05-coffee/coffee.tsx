@@ -1,7 +1,8 @@
 import { useGLTF } from "@react-three/drei";
 import { type ThreeElements } from "@react-three/fiber";
 import { DoubleSide, Mesh } from "three";
-import { useCoffeeSteamControls, useCoffeeSteamMaterial } from "./coffee-hooks";
+import { useCoffeeSteamControls } from "./hooks/use-coffee-steam-controls";
+import { useCoffeeSteamMaterial } from "./hooks/use-coffee-steam-material";
 
 export default function Coffee(props: ThreeElements["group"]) {
   const { nodes: gltfNodes, materials } = useGLTF("/models/coffee.glb");
