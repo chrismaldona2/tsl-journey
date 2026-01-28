@@ -1,20 +1,13 @@
-import { useGLTF } from "@react-three/drei";
 import { useFrame, type ThreeElements } from "@react-three/fiber";
 import { useRef } from "react";
 import { type Mesh } from "three";
 import { useLightsShadingMaterial } from "./hooks/use-lights-shading-material";
 import { useLightsShadingControls } from "./hooks/use-lights-shading-controls";
 import WorldLightHelper from "../helpers/world-light-helper";
-
-type FishesGLBNodes = {
-  koi: Mesh;
-  whale: Mesh;
-};
+import { useAssetsGLB } from "@/hooks/use-assets-glb";
 
 export default function LightsShading(props: ThreeElements["group"]) {
-  const models = useGLTF("/models/fishes.glb", "/draco/")
-    .nodes as FishesGLBNodes;
-
+  const { koi, whale } = useAssetsGLB();
   const { nodes, uniforms } = useLightsShadingMaterial();
   const { dirLgtHelperRef, pointLgtHelperRef } =
     useLightsShadingControls(uniforms);
@@ -28,11 +21,11 @@ export default function LightsShading(props: ThreeElements["group"]) {
 
   return (
     <group {...props}>
-      <mesh ref={koiRef} geometry={models.koi.geometry}>
+      <mesh ref={koiRef} geometry={koi.geometry}>
         <meshBasicNodeMaterial {...nodes} />
       </mesh>
 
-      <mesh geometry={models.whale.geometry} position-x={1.5}>
+      <mesh geometry={whale.geometry} position-x={1.5}>
         <meshBasicNodeMaterial {...nodes} />
       </mesh>
 

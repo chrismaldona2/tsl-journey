@@ -20,7 +20,7 @@ export default function FireworkParticlesCPU({
       count={params?.particleSize ?? fireworkConfig.particleCount}
       position={position}
     >
-      <pointsNodeMaterial depthWrite={false} transparent {...nodes} />
+      <spriteNodeMaterial depthWrite={false} transparent {...nodes} />
     </sprite>
   );
 }

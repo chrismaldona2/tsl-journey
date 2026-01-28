@@ -117,7 +117,7 @@ export function useFireworkGPU({
       freq: uniforms.twinkleFrequency,
       amplitude: uniforms.twinkleAmplitude,
     });
-    const sizeNode = size.mul(scaling).mul(twinkling);
+    const scaleNode = size.mul(scaling).mul(twinkling);
 
     /*
      *
@@ -144,7 +144,7 @@ export function useFireworkGPU({
     return {
       nodes: {
         positionNode,
-        sizeNode,
+        scaleNode,
         colorNode,
         opacityNode,
       },

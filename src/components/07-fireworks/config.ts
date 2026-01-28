@@ -24,7 +24,7 @@ export type FireworkParams = {
 export const fireworkConfig: FireworkParams = {
   progress: 0,
   fullGPU: true,
-  particleCount: 1000,
+  particleCount: 2500,
   insideColor: "#fffffa",
   outsideColor: "#e48222",
   colorBias: 0.6,

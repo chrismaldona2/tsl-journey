@@ -8,6 +8,8 @@ import LightsShading from "./08-lights-shading/lights-shading";
 import SeaShading from "./09-raging-sea-shading/sea-shading";
 import HalftoneShading from "./10-halftone-shading/halftone-shading";
 import Earth from "./11-earth/earth";
+import ParticlesCursor from "./12-particles-cursor/particles-cursor";
+import ParticlesMorphing from "./13-particles-morphing/particles-morphing";
 
 const SketchesGap = 2;
 
@@ -24,6 +26,8 @@ export default function Scene() {
       <SeaShading position-x={SketchesGap * 7.8} />
       <HalftoneShading position-x={SketchesGap * 8.8} />
       <Earth position-x={SketchesGap * 9.8} />
+      <ParticlesCursor position-x={SketchesGap * 10.8} />
+      <ParticlesMorphing position-x={SketchesGap * 12} />
     </>
   );
 }

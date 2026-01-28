@@ -128,7 +128,7 @@ export function useFireworkCPU({
       freq: uniforms.twinkleFrequency,
       amplitude: uniforms.twinkleAmplitude,
     });
-    const sizeNode = size.mul(scaling).mul(twinkling);
+    const scaleNode = size.mul(scaling).mul(twinkling);
 
     /*
      *
@@ -155,7 +155,7 @@ export function useFireworkCPU({
     return {
       nodes: {
         positionNode,
-        sizeNode,
+        scaleNode,
         colorNode,
         opacityNode,
       },

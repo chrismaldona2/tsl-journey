@@ -35,9 +35,9 @@ export default function Canvas({ children }: { children: ReactNode }) {
         await renderer.init();
         return renderer;
       }}
-      camera={{ position: [20.5, 1, 2.5] }}
+      camera={{ position: [24, 0, 1.5] }}
     >
-      <OrbitControls makeDefault target={[19.8, 0, 0]} />
+      <OrbitControls makeDefault target={[24, 0, 0]} />
       {children}
     </FiberCanvas>
   );

@@ -1,11 +1,16 @@
-import { useGLTF } from "@react-three/drei";
+import { useTexture } from "@react-three/drei";
 import { type ThreeElements } from "@react-three/fiber";
-import { DoubleSide, Mesh } from "three";
+import { DoubleSide, SRGBColorSpace } from "three";
 import { useCoffeeSteamControls } from "./hooks/use-coffee-steam-controls";
 import { useCoffeeSteamMaterial } from "./hooks/use-coffee-steam-material";
+import { useAssetsGLB } from "@/hooks/use-assets-glb";
 
 export default function Coffee(props: ThreeElements["group"]) {
-  const { nodes: gltfNodes, materials } = useGLTF("/models/coffee.glb");
+  const { coffee } = useAssetsGLB();
+  const bakedTexture = useTexture("/textures/baked_coffee.png", (tex) => {
+    tex.colorSpace = SRGBColorSpace;
+    tex.flipY = false;
+  });
 
   const { nodes, uniforms } = useCoffeeSteamMaterial();
   useCoffeeSteamControls(uniforms);
@@ -13,11 +18,9 @@ export default function Coffee(props: ThreeElements["group"]) {
   return (
     <group {...props}>
       {/* Coffee Cup */}
-      <mesh
-        geometry={(gltfNodes.baked as Mesh).geometry}
-        material={materials.baked}
-        scale={0.15}
-      />
+      <mesh geometry={coffee.geometry}>
+        <meshBasicNodeMaterial map={bakedTexture} />
+      </mesh>
 
       {/* Coffee Steam */}
       <mesh position-y={0.3} scale={[0.225, 0.6, 0.225]}>
