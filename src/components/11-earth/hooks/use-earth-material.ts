@@ -2,7 +2,7 @@ import type { UniformSet } from "@/types/uniforms";
 import { useTexture } from "@react-three/drei";
 import { useMemo } from "react";
 import { SRGBColorSpace } from "three";
-import { earthConfig as config, type EarthParams } from "./config";
+import { earthConfig as config, type EarthParams } from "../config";
 import {
   cameraPosition,
   color,

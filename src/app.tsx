@@ -2,7 +2,6 @@ import { Stats } from "@react-three/drei";
 import Canvas from "./components/canvas";
 import Scene from "./components/scene";
 import Leva from "./components/leva";
-import { UITunnel } from "./components/helpers/tunnels";
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
         <Scene />
         <Stats />
       </Canvas>
-      <UITunnel.Out />
     </>
   );
 }

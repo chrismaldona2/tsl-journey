@@ -1,13 +1,12 @@
 /* eslint-disable react-hooks/purity */
 import type { UniformSet } from "@/types/uniforms";
-import { useMemo, useRef } from "react";
+import { useMemo } from "react";
 import {
+  attribute,
   float,
-  instanceIndex,
   mix,
   mx_noise_float,
   smoothstep,
-  storage,
   uniform,
   uv,
   vec3,
@@ -15,22 +14,22 @@ import {
 import {
   particlesMorphingConfig as config,
   type ParticlesMorphingParams,
-} from "./config";
+} from "../config";
 import { useAssetsGLB } from "@/hooks/use-assets-glb";
-import { StorageInstancedBufferAttribute } from "three/webgpu";
-import { useControls } from "leva";
+import { InstancedBufferAttribute, DynamicDrawUsage } from "three";
 
-export default function useParticlesMorphingMaterial() {
+export function useParticlesMorphingMaterial() {
   const models = useAssetsGLB();
 
   const material = useMemo(() => {
     /*
-     * Geometry Buffers
+     * Geometry Buffers (The Source Library)
      */
     const geometries = [models.robot.geometry, models.portal_gun.geometry];
     const maxParticleCount = Math.max(
       ...geometries.map((g) => g.attributes.position.count),
     );
+
     const geometryBuffers: Float32Array[] = [];
     geometries.forEach((geometry) => {
       const oldPositionArray = geometry.attributes.position.array;
@@ -52,18 +51,29 @@ export default function useParticlesMorphingMaterial() {
       }
       geometryBuffers.push(newPositionArray);
     });
-    const positionStorageAttributes = geometryBuffers.map(
-      (buf) => new StorageInstancedBufferAttribute(buf, 3),
-    );
 
     const sizeBuffer = new Float32Array(maxParticleCount);
     for (let i = 0; i < maxParticleCount; i++) {
       sizeBuffer[i] = Math.random();
     }
-    const sizeStorageAttribute = new StorageInstancedBufferAttribute(
-      sizeBuffer,
-      1,
-    );
+
+    const activeArrayA = new Float32Array(maxParticleCount * 3);
+    const activeArrayB = new Float32Array(maxParticleCount * 3);
+
+    activeArrayA.set(geometryBuffers[0]);
+    activeArrayB.set(geometryBuffers[1]);
+
+    const posA = new InstancedBufferAttribute(activeArrayA, 3);
+    const posB = new InstancedBufferAttribute(activeArrayB, 3);
+
+    posA.setUsage(DynamicDrawUsage);
+    posB.setUsage(DynamicDrawUsage);
+
+    const attributes = {
+      posA: posA,
+      posB: posB,
+      size: new InstancedBufferAttribute(sizeBuffer, 1),
+    };
 
     /*
      * Uniforms
@@ -74,24 +84,13 @@ export default function useParticlesMorphingMaterial() {
     };
 
     /*
-     * Positioning
+     * Positioning (TSL)
      */
-    const posStorageBufferA = storage(
-      positionStorageAttributes[0],
-      "vec3",
-      maxParticleCount,
-    );
-    const posStorageBufferB = storage(
-      positionStorageAttributes[1],
-      "vec3",
-      maxParticleCount,
-    );
+    const posANode = attribute("posA", "vec3");
+    const posBNode = attribute("posB", "vec3");
 
-    const posA = posStorageBufferA.element(instanceIndex);
-    const posB = posStorageBufferB.element(instanceIndex);
-
-    const noiseA = mx_noise_float(posB).smoothstep(-1, 1);
-    const noiseB = mx_noise_float(posA).smoothstep(-1, 1);
+    const noiseA = mx_noise_float(posBNode).smoothstep(-1, 1);
+    const noiseB = mx_noise_float(posANode).smoothstep(-1, 1);
     const finalNoise = mix(noiseA, noiseB, uniforms.progress);
 
     const delay = uniforms.animationDuration.oneMinus().mul(finalNoise);
@@ -102,17 +101,12 @@ export default function useParticlesMorphingMaterial() {
       uniforms.progress,
     );
 
-    const positionNode = mix(posA, posB, randomizedProgress);
+    const positionNode = mix(posANode, posBNode, randomizedProgress);
 
     /*
      * Scaling
      */
-    const sizeStorageBuffer = storage(
-      sizeStorageAttribute,
-      "float",
-      maxParticleCount,
-    );
-    const size = sizeStorageBuffer.element(instanceIndex);
+    const size = attribute("aSize", "float");
     const scaleNode = float(0.035).mul(size);
 
     /*
@@ -135,21 +129,10 @@ export default function useParticlesMorphingMaterial() {
       },
       uniforms,
       maxParticleCount,
+      attributes,
+      geometryBuffers,
     };
   }, [models]);
-
-  const uniformsRef = useRef(material.uniforms);
-  useControls("🧬 13 — Particles Morphing", {
-    progress: {
-      value: config.progress,
-      min: 0,
-      max: 1,
-      step: 0.001,
-      onChange: (v) => {
-        uniformsRef.current.progress.value = v;
-      },
-    },
-  });
 
   return material;
 }

@@ -1,6 +1,5 @@
-import type { UniformSet } from "@/types/uniforms";
 import { useTexture } from "@react-three/drei";
-import { useMemo } from "react";
+import { useMemo, type RefObject } from "react";
 import { Fn } from "three/src/nodes/TSL.js";
 import {
   Discard,
@@ -15,22 +14,27 @@ import {
 } from "three/tsl";
 import {
   particlesCursorConfig as config,
-  type ParticlesCursorParams,
-} from "./config";
+  type ParticlesCursorUniforms,
+} from "../config";
 import type { CanvasTexture } from "three";
 
 export default function useParticlesCursorMaterial(
-  displacementTexture?: CanvasTexture,
+  textureRef: RefObject<{ texture: CanvasTexture } | null>,
 ) {
   const dogsTex = useTexture("/textures/dogs.png");
 
-  return useMemo(() => {
-    const uniforms: UniformSet<Omit<ParticlesCursorParams, "particleCount">> = {
+  const material = useMemo(() => {
+    if (!textureRef.current) return;
+    const displacementTexture = textureRef.current.texture;
+
+    const uniforms: ParticlesCursorUniforms = {
+      particleSize: uniform(config.particleSize),
+      displacementIntensity: uniform(config.displacementIntensity),
+      displacementEdgeStart: uniform(config.displacementEdgeStart),
+      displacementEdgeEnd: uniform(config.displacementEdgeEnd),
       gridSize: uniform(config.gridSize),
       gridSpacing: uniform(config.gridSpacing),
-      particleSize: uniform(config.particleSize),
       colorPower: uniform(config.colorPower),
-      displacementIntensity: uniform(config.displacementIntensity),
     };
 
     const i = instanceIndex.toFloat();
@@ -53,7 +57,10 @@ export default function useParticlesCursorMaterial(
     const centeredY = y.sub(half);
     const randomDisplaceIntensity = hash(i);
     const randomAngleIntensity = hash(i.add(1)).mul(PI2);
-    const displacementTexIntensity = displacementTex.r.smoothstep(0.1, 0.4);
+    const displacementTexIntensity = displacementTex.r.smoothstep(
+      uniforms.displacementEdgeStart,
+      uniforms.displacementEdgeEnd,
+    );
 
     const displacement = vec3(
       randomAngleIntensity.cos().mul(uniforms.displacementIntensity.mul(0.8)),
@@ -94,6 +101,9 @@ export default function useParticlesCursorMaterial(
         colorNode,
         scaleNode,
       },
+      uniforms,
     };
-  }, [displacementTexture, dogsTex]);
+  }, [textureRef, dogsTex]);
+
+  return material;
 }

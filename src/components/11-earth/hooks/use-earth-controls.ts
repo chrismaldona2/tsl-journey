@@ -2,7 +2,7 @@
 import { useControls } from "leva";
 import { useRef } from "react";
 import type useEarthMaterial from "./use-earth-material";
-import { earthConfig as config } from "./config";
+import { earthConfig as config } from "../config";
 import { Spherical, Vector3, type Mesh } from "three";
 import type useAtmosphereMaterial from "./use-atmosphere-material";
 

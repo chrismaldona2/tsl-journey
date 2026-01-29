@@ -10,7 +10,7 @@ import {
   vec3,
   mix,
 } from "three/tsl";
-import { type AtmosphereParams, earthConfig as config } from "./config";
+import { type AtmosphereParams, earthConfig as config } from "../config";
 
 export default function useAtmosphereMaterial() {
   return useMemo(() => {
