@@ -76,5 +76,6 @@ export default function useParticlesMorphingControls(
      */
     "Morph to Robot": button(() => triggerMorph(0)),
     "Morph to Gun": button(() => triggerMorph(1)),
+    "Morph to Skull": button(() => triggerMorph(2)),
   }));
 }

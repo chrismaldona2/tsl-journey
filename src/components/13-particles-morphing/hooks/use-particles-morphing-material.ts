@@ -23,9 +23,13 @@ export function useParticlesMorphingMaterial() {
 
   const material = useMemo(() => {
     /*
-     * Geometry Buffers (The Source Library)
+     * Geometry Buffers
      */
-    const geometries = [models.robot.geometry, models.portal_gun.geometry];
+    const geometries = [
+      models.robot.geometry,
+      models.portal_gun.geometry,
+      models.skull.geometry,
+    ];
     const maxParticleCount = Math.max(
       ...geometries.map((g) => g.attributes.position.count),
     );
@@ -84,7 +88,7 @@ export function useParticlesMorphingMaterial() {
     };
 
     /*
-     * Positioning (TSL)
+     * Positioning
      */
     const posANode = attribute("posA", "vec3");
     const posBNode = attribute("posB", "vec3");
